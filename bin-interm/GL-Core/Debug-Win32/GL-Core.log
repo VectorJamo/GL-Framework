@@ -1,0 +1,25 @@
+﻿  application.cpp
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\application.cpp(25,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\application.cpp(25,34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\application.cpp(25,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\application.cpp(25,18): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  primitives.cpp
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\graphics\primitives.cpp(14,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\graphics\primitives.cpp(14,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\graphics\primitives.cpp(14,52): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\graphics\primitives.cpp(14,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  stb_image.cpp
+  shader.cpp
+  texture.cpp
+  window.cpp
+  main.cpp
+  mat4.cpp
+  vec2.cpp
+  vec3.cpp
+  vec4.cpp
+  input.cpp
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'E:\OpenGL Projects\Visual Studio\GL-Framework\bin\GL-Core\Debug-Win32\vc120.pdb'; linking object as if no debug info
+  GL-Core.vcxproj -> E:\OpenGL Projects\Visual Studio\GL-Framework\bin\GL-Core\Debug-Win32\GL-Core.exe
