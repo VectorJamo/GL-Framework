@@ -184,6 +184,9 @@
     <None Include="src\shaders\fs.glsl" />
     <None Include="src\shaders\vs.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\among us.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -29,7 +29,6 @@ Rect::~Rect()
 
 void Rect::CreateRect()
 {
-	// Create the vao, vbo, ibo, shader
     float positions[8] =
     {
         0.0f, 0.0f,
@@ -98,15 +97,15 @@ void Rect::SetTexture(const char* texturePath)
         1.0f, 0.0f,
         1.0f, 1.0f
     };
-    unsigned int vbo2;
-    glGenBuffers(1, &vbo2);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo2);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, textCoords, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &pVBO2);
+    glBindBuffer(GL_ARRAY_BUFFER, pVBO2);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, textCoords, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindVertexArray(pObject.vao);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+    glBindBuffer(GL_ARRAY_BUFFER, pVBO2);
  
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
@@ -148,4 +147,18 @@ void Rect::SetColor(const Color& color)
     pObject.shader->Bind();
     pObject.shader->SetUniformColor4f("uColor", color);
     pObject.shader->Unbind();
+}
+
+void Rect::SetTextureClipRect(int x, int y, int width, int height)
+{
+    float newTextCoords[8] =
+    {
+                x / (float)(pTexture->GetWidth())                ,       ((pTexture->GetHeight()) - y) / (float)(pTexture->GetHeight()),
+                x / (float)(pTexture->GetWidth())                ,       ((pTexture->GetHeight()) - (y + height)) / (float)(pTexture->GetHeight()),
+               (x + width) / (float)(pTexture->GetWidth())       ,      ((pTexture->GetHeight()) - (y + height)) / ((float)pTexture->GetHeight()),
+               (x + width) / (float)(pTexture->GetWidth())       ,      ((pTexture->GetHeight() - y) / (float)(pTexture->GetHeight())),
+    };
+
+    glBindBuffer(GL_ARRAY_BUFFER, pVBO2);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 8, newTextCoords);
 }

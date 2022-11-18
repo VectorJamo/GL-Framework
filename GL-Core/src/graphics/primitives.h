@@ -23,6 +23,8 @@ class  Rect
 {
 private:
 	GLObject pObject;
+	unsigned int pVBO2;
+
 	Texture* pTexture;
 
 	vec2 pPosition, pSize;
@@ -43,6 +45,7 @@ public:
 	void SetPosition(const vec2& pos);
 	void SetSize(const vec2& size);
 	void SetColor(const Color& color);
+	void SetTextureClipRect(int x, int y, int width, int height);
 
 	// Getters
 	inline vec2 GetPosition() { return pPosition; }

@@ -1,1 +1,6 @@
-﻿
+﻿  application.cpp
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\application.cpp(25,42): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\application.cpp(25,34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\application.cpp(25,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+E:\OpenGL Projects\Visual Studio\GL-Framework\GL-Core\src\application.cpp(25,18): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  GL-Core.vcxproj -> E:\OpenGL Projects\Visual Studio\GL-Framework\bin\GL-Core\Debug-Win32\GL-Core.exe

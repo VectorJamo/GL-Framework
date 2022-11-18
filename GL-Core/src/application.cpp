@@ -1,7 +1,7 @@
 #include "application.h"
 
 Application::Application()
-	:window(nullptr)
+	:window(nullptr), rect(nullptr)
 {
 }
 
@@ -22,10 +22,7 @@ void Application::Setup()
 	window->SetVSyncEnabled(true);
 	Input::Init(window);
 
-	rect = new Rect(100.0f, 100.0f, 50.0f, 50.0f);
-	rect->SetPosition(vec2(200, 200));
-	rect->SetSize(vec2(100, 100));
-	rect->SetColor(Color(1.0f, 0.0f, 0.0f, 1.0f));
+	rect = new Rect(100.0f, 100.0f, 300.0f, 300.0f);
 	rect->SetTexture("res/textures/among us.png");
 }
 
