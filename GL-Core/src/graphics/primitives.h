@@ -6,6 +6,9 @@
 #include "../maths/vec/vec4.h"
 #include "../maths/mat/mat4.h"
 
+#include "../util/orthographic_camera.h"
+#include <cassert>
+
 struct Color
 {
 	float r, g, b, a;
@@ -16,34 +19,44 @@ struct Color
 struct GLObject
 {
 	unsigned int vao, vbo, ibo;
-	Shader* shader;
+
+	GLObject();
 };
 
-class  Rect
+class Sprite
 {
 private:
+	// Sprite's data
 	GLObject pObject;
-	unsigned int pVBO2;
-
+	static Shader* pShader;
+	unsigned int pTextCoordVBO;
 	Texture* pTexture;
 
+	// Sprite's transform
 	vec2 pPosition, pSize;
 	Color pColor;
+
+	// Sprite's transform matrices
+	mat4 pTranslation, pRotation, pScale;
+	mat4 pModelView;
 
 private:
 	void CreateRect();
 
 public:
-	Rect(int x, int y, int width, int height);
-	~Rect();
+	Sprite(int x, int y, int width, int height);
+	~Sprite();
 
 	void Draw();
-	void Draw(Shader* shader);
 	
+	static void Init();
+	static void Free();
+
 	// Setters
 	void SetTexture(const char* texturePath);
 	void SetPosition(const vec2& pos);
 	void SetSize(const vec2& size);
+	void SetRotation(const float& angle);
 	void SetColor(const Color& color);
 	void SetTextureClipRect(int x, int y, int width, int height);
 

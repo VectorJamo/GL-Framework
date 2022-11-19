@@ -51,6 +51,9 @@
     <ClCompile Include="src\application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\util\orthographic_camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\externals\stb_image\stb_image.h">
@@ -95,6 +98,9 @@
     <ClInclude Include="src\application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\util\orthographic_camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\vs.glsl" />
@@ -104,6 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\among us.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\chess.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

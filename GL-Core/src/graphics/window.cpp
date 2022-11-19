@@ -32,7 +32,6 @@ bool Window::Init()
         std::cout << "Failed to initialize GLEW!" << std::endl;
         return false;
     }
-    std::cout << glGetString(GL_VERSION) << std::endl;
     return true;
 }
 bool Window::IsClosed()

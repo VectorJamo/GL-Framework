@@ -1,40 +1,50 @@
 #include "primitives.h"
 
+#include "../maths/constants.h"
+
 Color::Color()
     :r(0.0f), g(0.0f), b(0.0f), a(0.0f)
-{
-
-}
+{}
 Color::Color(float r, float g, float b, float a)
     :r(r), g(g), b(b), a(a)
+{}
+
+GLObject::GLObject()
+    :vao(0), vbo(0), ibo(0)
+{}
+
+Shader* Sprite::pShader = nullptr;
+Sprite::Sprite(int x, int y, int width, int height)
+	:pTexture(nullptr), pPosition(x, y), pSize(width, height), pTextCoordVBO(0)
 {
+    if (!OrthographicCamera::IsCameraInitialized())
+    {
+        std::cout << "Initialize a camera before rendering anything!" << std::endl;
+        assert(false);
+    }
+    else {
+        CreateRect();
+    }
 }
 
-Rect::Rect(int x, int y, int width, int height)
-	:pTexture(nullptr), pPosition(x, y), pSize(width, height)
-{
-	pObject.vao = 0; pObject.vbo = 0; pObject.ibo = 0; pObject.shader = nullptr;
-	pColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	CreateRect();
-}
-
-Rect::~Rect()
+Sprite::~Sprite()
 {
 	if (pTexture != nullptr)
 		delete pTexture;
-
-	delete pObject.shader;
+}
+void Sprite::Free()
+{
+    delete pShader;
 }
 
-void Rect::CreateRect()
+void Sprite::CreateRect()
 {
     float positions[8] =
     {
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        1.0f, 0.0f
+        -1.0f,   1.0f,
+        -1.0f,  -1.0f,
+         1.0f,  -1.0f,
+         1.0f,   1.0f
     };
     unsigned char indices[6] = {
         0, 1, 2, 2, 0, 3
@@ -58,37 +68,41 @@ void Rect::CreateRect()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    pObject.shader = new Shader("src/shaders/vs.glsl", "src/shaders/fs.glsl");
-    pObject.shader->Bind();
-
-    mat4 projection = orthographic(0.0f, 800.0f, 0.0f, 600.0f, -1.0f, 1.0f);
-    pObject.shader->SetUniformMat4f("uProjection", projection);
-
-    SetPosition(pPosition);
     SetSize(pSize);
-    
     SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
-    pObject.shader->SetUniform1i("uUseTexture", 0);
-    pObject.shader->Unbind();
 }
 
-void Rect::Draw()
+void Sprite::Draw()
 {
     glBindVertexArray(pObject.vao);
-    pObject.shader->Bind();
+    pShader->Bind();
+    // Create the model view matrix
+    pModelView = (pTranslation * OrthographicCamera::GetCameraTranslationMatrix()) * (OrthographicCamera::GetCameraRotationMatrix() * pRotation) * pScale;
+
+    if (pTexture == nullptr)
+    {
+        pShader->SetUniformMat4f("uProjection", OrthographicCamera::GetProjectionMatrix());
+        pShader->SetUniformMat4f("uModelView", pModelView);
+        pShader->SetUniform1i("uUseTexture", 0);
+        pShader->SetUniformColor4f("uColor", pColor);
+    }
+    else
+    {
+        pShader->SetUniformMat4f("uProjection", OrthographicCamera::GetProjectionMatrix());
+        pShader->SetUniformMat4f("uModelView", pModelView);
+        pTexture->Bind(0);
+        pShader->SetUniform1i("uUseTexture", 1);
+    }
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
 }
 
-void Rect::Draw(Shader* shader)
+void Sprite::Init()
 {
-    glBindVertexArray(pObject.vao);
-    shader->Bind();
-
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
+    pShader = new Shader("src/shaders/vs.glsl", "src/shaders/fs.glsl");
 }
 
-void Rect::SetTexture(const char* texturePath)
+void Sprite::SetTexture(const char* texturePath)
 {
     float textCoords[8] =
     {
@@ -98,14 +112,14 @@ void Rect::SetTexture(const char* texturePath)
         1.0f, 1.0f
     };
 
-    glGenBuffers(1, &pVBO2);
-    glBindBuffer(GL_ARRAY_BUFFER, pVBO2);
+    glGenBuffers(1, &pTextCoordVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, pTextCoordVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, textCoords, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindVertexArray(pObject.vao);
 
-    glBindBuffer(GL_ARRAY_BUFFER, pVBO2);
+    glBindBuffer(GL_ARRAY_BUFFER, pTextCoordVBO);
  
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
@@ -114,42 +128,33 @@ void Rect::SetTexture(const char* texturePath)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     pTexture = new Texture(texturePath);
-
-    pObject.shader->Bind();
-    pTexture->Bind(0);
-    pObject.shader->SetUniform1i("uUseTexture", 1);
-    pObject.shader->Unbind();
 }
 
-void Rect::SetPosition(const vec2& pos)
+void Sprite::SetPosition(const vec2& pos)
 {
     pPosition = pos;
-    mat4 translation = translate(vec3(pos.x, pos.y, 0.0f));
-
-    pObject.shader->Bind();
-    pObject.shader->SetUniformMat4f("uTranslation", translation);
-    pObject.shader->Unbind();
+    pTranslation = translate(vec3(pos.x + pSize.x/2, pos.y - pSize.y/2, 0.0f));
 }
 
-void Rect::SetSize(const vec2& size)
+void Sprite::SetSize(const vec2& size)
 {
     pSize = size;
-    mat4 scaleMat = scale(vec3(size.x, size.y, 1.0f));\
-
-    pObject.shader->Bind();
-    pObject.shader->SetUniformMat4f("uScale", scaleMat);
-    pObject.shader->Unbind();
+    pScale = scale(vec3(size.x/2, size.y/2, 1.0f)); // The size has to be divided by 2 because it is scaled evenly both on right and left
+    
+    SetPosition(pPosition);
 }
 
-void Rect::SetColor(const Color& color)
+void Sprite::SetRotation(const float& angle)
+{
+    pRotation = rotate(-TO_RADIANS(angle), vec3(0.0f, 0.0f, 1.0f));
+}
+
+void Sprite::SetColor(const Color& color)
 {
     pColor = color;
-    pObject.shader->Bind();
-    pObject.shader->SetUniformColor4f("uColor", color);
-    pObject.shader->Unbind();
 }
 
-void Rect::SetTextureClipRect(int x, int y, int width, int height)
+void Sprite::SetTextureClipRect(int x, int y, int width, int height)
 {
     float newTextCoords[8] =
     {
@@ -159,6 +164,8 @@ void Rect::SetTextureClipRect(int x, int y, int width, int height)
                (x + width) / (float)(pTexture->GetWidth())       ,      ((pTexture->GetHeight() - y) / (float)(pTexture->GetHeight())),
     };
 
-    glBindBuffer(GL_ARRAY_BUFFER, pVBO2);
+    glBindBuffer(GL_ARRAY_BUFFER, pTextCoordVBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 8, newTextCoords);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

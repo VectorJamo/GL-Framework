@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cmath>
 
+#include "../vec/vec2.h"
 #include "../vec/vec3.h"
 #include "../vec/vec4.h"
 
@@ -31,6 +32,8 @@ struct  translate : public mat4
 struct  rotate : public mat4
 {
 	rotate(float angle, const vec3& rot);
+	rotate(float angle, const vec2& rot);
+
 };
 
 // Pojection matrices

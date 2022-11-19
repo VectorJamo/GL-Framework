@@ -1,13 +1,16 @@
 #include "application.h"
 
 Application::Application()
-	:window(nullptr), rect(nullptr)
+	:window(nullptr), rect(nullptr), camera(nullptr)
 {
 }
 
 Application::~Application()
 {
 	delete rect;
+
+	Sprite::Free();
+	delete camera;
 	delete window;
 }
 
@@ -20,10 +23,16 @@ void Application::Setup()
 		assert(false);
 	}
 	window->SetVSyncEnabled(true);
-	Input::Init(window);
 
-	rect = new Rect(100.0f, 100.0f, 300.0f, 300.0f);
-	rect->SetTexture("res/textures/among us.png");
+	// Initialze the systems
+	Input::Init(window);
+	Sprite::Init();
+
+	camera = new OrthographicCamera(-400.0f, 400.0f, 300.0f, -300.0f, 1.0f, -1.0f);
+	camera->SetZoomSpeed(50.0f);
+
+	rect = new Sprite(-50.0f, 50.0f, 100.0f, 100.0f);
+	rect->SetTexture("res/textures/chess.jpg");
 }
 
 void Application::Update()
@@ -35,7 +44,7 @@ void Application::Update()
 
 		// Draw
 		rect->Draw();
-
+		
 		window->Display();
 	}
 }
@@ -43,11 +52,8 @@ void Application::Update()
 void Application::HandleInput()
 {
 	window->PollEvents();
-
-	if (Input::IsKeyPressed(GLFW_KEY_W)) 
-		std::cout << "W key is pressed!" << std::endl;
+	camera->UpdateControls();
 }
-
 void Application::Run()
 {
 	Setup();

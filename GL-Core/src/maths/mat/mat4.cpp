@@ -73,6 +73,17 @@ rotate::rotate(float angle, const vec3& rot)
 	}
 }
 
+rotate::rotate(float angle, const vec2& rot)
+{
+	mat4x4[0][0] = cos(angle);
+	mat4x4[0][1] = -sin(angle);
+	mat4x4[0][2] = -rot.x * cos(angle) + rot.y * sin(angle) + rot.x;
+
+	mat4x4[1][0] = sin(angle);
+	mat4x4[1][1] = cos(angle);
+	mat4x4[1][2] = -rot.x * sin(angle) - rot.y * cos(angle) + rot.y;
+}
+
 // Projection matrices
 // Orthographic projection matrix
 orthographic::orthographic(float left, float right, float top, float bottom, float znear, float zfar)

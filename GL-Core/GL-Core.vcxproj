@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\util\orthographic_camera.cpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\graphics\primitives.cpp" />
     <ClCompile Include="src\externals\stb_image\stb_image.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="src\util\input.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\util\orthographic_camera.h" />
     <ClInclude Include="src\application.h" />
     <ClInclude Include="src\graphics\primitives.h" />
     <ClInclude Include="src\core.h" />
@@ -186,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\among us.png" />
+    <Image Include="res\textures\chess.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

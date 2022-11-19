@@ -11,7 +11,9 @@ class Application
 {
 private:
 	Window* window;
-	Rect* rect;
+	Sprite* rect;
+
+	OrthographicCamera* camera;
 
 public:
 	Application();
